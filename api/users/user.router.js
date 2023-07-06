@@ -8,7 +8,7 @@ const { createUser,
 const router = require("express").Router();
 const { checkToken } = require("../../auth/token_validation");
 
-router.post("/", checkToken, createUser); // post is used to create a new resource
+router.post("/", createUser); // post is used to create a new resource
 router.get("/", checkToken, getUsers); // get is used to retrieve data
 router.get("/:user_id", checkToken, getUserByUserId); // :user_id is a parameter
 router.patch("/", checkToken, updateUser); // patch is used to update a part of the resource
