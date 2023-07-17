@@ -1,11 +1,13 @@
-const { create, 
-        getUsers, 
-        getUserByUserId, 
-        updateUser, 
-        deleteUser,
-        getUserByUserEmail } = require("./user.service");
+const { create,
+    getUsers,
+    getUserByUserId,
+    updateUser,
+    deleteUser,
+    getUserByUserEmail,
+    createPost,
+    getPosts } = require("./user.service");
 
-const {genSaltSync, hashSync, compareSync} = require("bcrypt"); // bcrypt is a library for hashing passwords
+const { genSaltSync, hashSync, compareSync } = require("bcrypt"); // bcrypt is a library for hashing passwords
 const { sign } = require("jsonwebtoken"); // jsonwebtoken is a library for generating tokens
 
 
@@ -17,7 +19,7 @@ module.exports = {
         body.password = hashSync(body.password, salt); // hashSync is a function from bcrypt
         create(body, (err, results) => {
             console.log("inside create");
-            if(err){
+            if (err) {
                 console.log(err);
                 return res.status(500).json({
                     success: 0,
@@ -35,11 +37,11 @@ module.exports = {
         console.log("inside getUserByUserId");
         const user_id = req.params.user_id;
         getUserByUserId(user_id, (err, results) => {
-            if(err){
+            if (err) {
                 console.log(err);
                 return;
             }
-            if(!results){
+            if (!results) {
                 return res.json({
                     success: 0,
                     message: "Record not found"
@@ -55,7 +57,7 @@ module.exports = {
     getUsers: (req, res) => {
         console.log("inside getUsers");
         getUsers((err, results) => {
-            if(err){
+            if (err) {
                 console.log(err);
                 return;
             }
@@ -72,11 +74,11 @@ module.exports = {
         const salt = genSaltSync(10);
         body.password = hashSync(body.password, salt); // hashSync is a function from bcrypt
         updateUser(body, (err, results) => {
-            if(err){
+            if (err) {
                 console.log(err);
                 return;
             }
-            if(!results){
+            if (!results) {
                 return res.json({
                     success: 0,
                     message: "Failed to update user"
@@ -93,11 +95,11 @@ module.exports = {
         console.log("inside deleteUser");
         const data = req.body;
         deleteUser(data, (err, results) => {
-            if(err){
+            if (err) {
                 console.log(err);
                 return;
             }
-            if(!results){
+            if (!results) {
                 return res.json({
                     success: 0,
                     message: "Record not found"
@@ -113,25 +115,26 @@ module.exports = {
     login: (req, res) => {
         const body = req.body;
         getUserByUserEmail(body.email, (err, results) => {
-            if(err){
+            if (err) {
                 console.log(err);
             }
-            if(!results){
+            if (!results) {
                 return res.json({
                     success: 0,
                     data: "Invalid email or password"
                 });
             }
             const result = compareSync(body.password, results.password);
-            if(result){
+            if (result) {
                 results.password = undefined; // remove password from the response
-                const jsontoken = sign({result: results}, process.env.JWT_KEY, {
+                const jsontoken = sign({ result: results }, process.env.JWT_KEY, {
                     expiresIn: "1h"
                 });
                 return res.json({
                     success: 1,
                     message: "login successfully",
-                    token: jsontoken
+                    token: jsontoken,
+                    result: results
                 });
             } else {
                 return res.json({
@@ -141,9 +144,45 @@ module.exports = {
             }
         })
 
- 
+
     },
 
-    
+    createUserPost: (req, res) => {
+
+        const body = req.body;
+
+        createPost(body, (err, results) => {
+            console.log("inside create");
+            if (err) {
+                console.log(err);
+                return res.status(500).json({
+                    success: 0,
+                    message: "Database connection error"
+                });
+            }
+            return res.status(200).json({
+                success: 1,
+                data: results
+            });
+        });
+    },
+
+    getPostsNewsfeed: (req, res) => {
+        console.log("inside getPosts");
+        getPosts((err, results) => {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            return res.json({
+                success: 1,
+                data: results
+            });
+        });
+    },
+
+
+
+
 };
 
