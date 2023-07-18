@@ -5,7 +5,8 @@ const { create,
     deleteUser,
     getUserByUserEmail,
     createPost,
-    getPosts } = require("./user.service");
+    getPosts,
+    addLike } = require("./user.service");
 
 const { genSaltSync, hashSync, compareSync } = require("bcrypt"); // bcrypt is a library for hashing passwords
 const { sign } = require("jsonwebtoken"); // jsonwebtoken is a library for generating tokens
@@ -180,6 +181,25 @@ module.exports = {
             });
         });
     },
+
+    addLike: (req, res) => {
+        console.log("inside addLike");
+        const body = req.body;
+        const post_id = req.body.post_id;
+        const user_id = req.body.user_id;
+
+        addLike(body, (err) => {
+            if (err) {
+                console.log(err);
+                res.status(500).send('Error adding like');
+            } else {
+                res.send('Like added successfully');
+            }
+        });
+
+    },
+
+
 
 
 

@@ -141,4 +141,45 @@ module.exports = {
 
 
 
+    addLike: (data, callback) => {
+
+        pool.query(
+            'update posts set like_count = like_count + 1 where post_id = ?',
+
+            [
+                data.post_id,
+            ],
+
+            (err) => {
+                console.log("inside7777" + err);
+                if (err) {
+                    callback(err);
+                } else {
+
+                    pool.query(
+                        'insert into postlikes(post_id, likeduser_id) values (?, ?)',
+
+                        [
+                            data.post_id,
+                            data.user_id
+                        ],
+
+                        (err, result, fields) => {
+
+                            if (err) {
+
+                                callback(err);
+                            } else {
+                                console.log("insidexxxxxxxxxx");
+                                callback(null);
+                            }
+                        });
+                }
+            });
+    },
+
+
+
+
+
 };

@@ -5,7 +5,8 @@ const { createUser,
     deleteUser,
     login,
     createUserPost,
-    getPostsNewsfeed } = require("./user.controller");
+    getPostsNewsfeed,
+    addLike } = require("./user.controller");
 
 const router = require("express").Router();
 const { checkToken } = require("../../auth/token_validation");
@@ -19,6 +20,6 @@ router.patch("/", checkToken, updateUser); // patch is used to update a part of 
 router.delete("/", checkToken, deleteUser); // delete is used to delete a resource
 router.post("/login", login);
 router.post("/post", createUserPost);// post is used to create a new resource
-
+router.post("/like", addLike); // post is used to addLikes
 
 module.exports = router; // export router to be used in app.js
