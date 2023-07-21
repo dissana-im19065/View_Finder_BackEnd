@@ -127,7 +127,7 @@ module.exports = {
 
     getPosts: callBack => {
         pool.query(
-            `select user.user_id, user.first_name, user.last_name, posts.post_id, posts.image_url, posts.description from user
+            `select user.user_id, user.first_name, user.last_name, posts.post_id, posts.image_url, posts.description, posts.like_count from user
              inner join posts on user.user_id = posts.user_id`,
             [],
             (error, results, fields) => {
@@ -140,11 +140,12 @@ module.exports = {
     },
 
 
-
     addLike: (data, callback) => {
 
         pool.query(
-            'update posts set like_count = like_count + 1 where post_id = ?',
+
+            'update posts set like_count = like_count+1  where post_id = ?',
+
 
             [
                 data.post_id,
@@ -157,23 +158,90 @@ module.exports = {
                 } else {
 
                     pool.query(
-                        'insert into postlikes(post_id, likeduser_id) values (?, ?)',
+                        // 'insert into postlikes(post_id, likeduser_id) values (?, ?)',
+                        'select like_count from posts where post_id=?',
+
 
                         [
                             data.post_id,
-                            data.user_id
+                            // data.user_id
                         ],
 
-                        (err, result, fields) => {
-
+                        (err, count) => {
+                            console.log("999999999999" + err);
                             if (err) {
 
                                 callback(err);
-                            } else {
-                                console.log("insidexxxxxxxxxx");
-                                callback(null);
-                            }
+                            } return callback(null, count);
                         });
+
+                }
+            });
+    },
+
+    removeLike: (data, callback) => {
+
+
+        pool.query(
+
+            'update posts set like_count = like_Count-1  where post_id = ?',
+
+            [
+                data.post_id,
+
+            ],
+
+            (err, results, fields) => {
+                console.log("999999999999" + err);
+                if (err) {
+                    callback(err);
+                } return callback(null, results);
+            });
+
+
+    },
+
+
+
+    addEvent: (data, callback) => {
+
+        pool.query(
+
+            `insert into events_calendar(user_id, date, notice)
+                values(?,?,?)`,
+
+            [
+                data.user_id,
+                data.date,
+                data.notice,
+            ],
+
+            (err) => {
+                console.log("inside7777" + err);
+                if (err) {
+                    callback(err);
+                } else {
+
+                    pool.query(
+
+                        'select user_id,date,notice from events_calendar where user_id=?',
+
+                        [
+                            data.user_id,
+
+                        ],
+
+                        (err, event) => {
+                            console.log("999999999999" + err);
+                            if (err) {
+
+                                callback(err);
+                            }
+                            console.log('yo');
+                            return callback(null, event);
+
+                        });
+
                 }
             });
     },

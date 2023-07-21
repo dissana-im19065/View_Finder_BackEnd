@@ -6,13 +6,16 @@ const { create,
     getUserByUserEmail,
     createPost,
     getPosts,
-    addLike } = require("./user.service");
+    addLike,
+    removeLike,
+    addEvent } = require("./user.service");
 
 const { genSaltSync, hashSync, compareSync } = require("bcrypt"); // bcrypt is a library for hashing passwords
 const { sign } = require("jsonwebtoken"); // jsonwebtoken is a library for generating tokens
 
 
 module.exports = {
+
     createUser: (req, res) => {
         console.log("inside createUser");
         const body = req.body;
@@ -185,19 +188,63 @@ module.exports = {
     addLike: (req, res) => {
         console.log("inside addLike");
         const body = req.body;
-        const post_id = req.body.post_id;
-        const user_id = req.body.user_id;
 
-        addLike(body, (err) => {
+
+        addLike(body, (err, count) => {
             if (err) {
                 console.log(err);
-                res.status(500).send('Error adding like');
-            } else {
-                res.send('Like added successfully');
-            }
+                return res.status(500).json({
+                    success: 0,
+                    message: "Database connection error"
+                });
+            } return res.status(200).json({
+                success: 1,
+                data: count
+            });
         });
 
     },
+
+    removeLike: (req, res) => {
+        console.log("inside removeLike");
+        const body = req.body;
+
+        removeLike(body, (err, results) => {
+            if (err) {
+                console.log(err);
+                return res.status(500).json({
+                    success: 0,
+                    message: "Database connection error"
+                });
+            } return res.status(200).json({
+                success: 1,
+                data: results
+            });
+        });
+
+    },
+
+    addEvent: (req, res) => {
+
+        const body = req.body;
+
+        addEvent(body, (err, event) => {
+            console.log("inside addevent");
+            if (err) {
+                console.log(err);
+                return res.status(500).json({
+                    success: 0,
+                    message: "Database connection error"
+                });
+            }
+            console.log("ddddd");
+            return res.status(200).json({
+                success: 1,
+                data: event
+            });
+        });
+    },
+
 
 
 
