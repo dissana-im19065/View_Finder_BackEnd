@@ -8,7 +8,13 @@ const { create,
     getPosts,
     addLike,
     removeLike,
-    addEvent } = require("./user.service");
+    addEvent,
+    getEventByUserId,
+    addAdds,
+    getAdds,
+    rentingProfile,
+    getRentByUserId,
+    getAllRentPosts } = require("./user.service");
 
 const { genSaltSync, hashSync, compareSync } = require("bcrypt"); // bcrypt is a library for hashing passwords
 const { sign } = require("jsonwebtoken"); // jsonwebtoken is a library for generating tokens
@@ -246,7 +252,116 @@ module.exports = {
     },
 
 
+    getEventByUserId: (req, res) => {
+        console.log("inside addLike");
+        const body = req.body;
 
+
+        getEventByUserId(body, (err, events) => {
+            if (err) {
+                console.log(err);
+                return res.status(500).json({
+                    success: 0,
+                    message: "Database connection error"
+                });
+            } return res.status(200).json({
+                success: 1,
+                data: events
+            });
+        });
+
+    },
+
+    addAdds: (req, res) => {
+
+        const body = req.body;
+
+        addAdds(body, (err, adds) => {
+            console.log("inside addAdds");
+            if (err) {
+                console.log(err);
+                return res.status(500).json({
+                    success: 0,
+                    message: "Database connection error"
+                });
+            }
+            console.log("dddddfffffff");
+            return res.status(200).json({
+                success: 1,
+                data: adds
+            });
+        });
+    },
+
+    getAdds: (req, res) => {
+        console.log("inside getAdds");
+        getAdds((err, results) => {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            return res.json({
+                success: 1,
+                data: results
+            });
+        });
+    },
+
+    rentingProfile: (req, res) => {
+
+        const body = req.body;
+
+        rentingProfile(body, (err, adds) => {
+            console.log("inside creating renting profile");
+            if (err) {
+                console.log('xexxxxxxxxxxxxx' + err);
+                return res.status(500).json({
+                    success: 0,
+                    message: "Database connection error"
+                });
+            }
+            console.log("dddddfffffff");
+            return res.status(200).json({
+                success: 1,
+                data: adds
+            });
+        });
+    },
+
+
+    getRentByUserId: (req, res) => {
+        console.log("inside getRent");
+        const body = req.body;
+
+
+        getRentByUserId(body, (err, events) => {
+            if (err) {
+                console.log(err);
+                return res.status(500).json({
+                    success: 0,
+                    message: "Database connection error"
+                });
+            } return res.status(200).json({
+                success: 1,
+                data: events
+            });
+        });
+
+    },
+
+    getAllRent: (req, res) => {
+        console.log("inside getRentposts");
+        getAllRentPosts((err, rentadds) => {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            return res.json({
+                success: 1,
+                data: rentadds
+            });
+        });
+    },
 
 
 
