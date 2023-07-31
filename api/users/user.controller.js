@@ -14,7 +14,10 @@ const { create,
     getAdds,
     rentingProfile,
     getRentByUserId,
-    getAllRentPosts } = require("./user.service");
+    getAllRentPosts,
+    getSearchAdds,
+    getUserTypebyUserId,
+    getSuggests } = require("./user.service");
 
 const { genSaltSync, hashSync, compareSync } = require("bcrypt"); // bcrypt is a library for hashing passwords
 const { sign } = require("jsonwebtoken"); // jsonwebtoken is a library for generating tokens
@@ -361,6 +364,70 @@ module.exports = {
                 data: rentadds
             });
         });
+    },
+
+
+
+
+    getSearchAdds: (req, res) => {
+        console.log("inside SearchAdds");
+        const body = req.body;
+
+
+        getSearchAdds(body, (err, events) => {
+            if (err) {
+                console.log(err);
+                return res.status(500).json({
+                    success: 0,
+                    message: "Database connection error"
+                });
+            } return res.status(200).json({
+                success: 1,
+                data: events
+            });
+        });
+
+    },
+
+    getUserTypebyUserId: (req, res) => {
+        console.log("inside getType");
+        const body = req.body;
+
+
+        getUserTypebyUserId(body, (err, events) => {
+            if (err) {
+                console.log(err);
+                return res.status(500).json({
+                    success: 0,
+                    message: "Database connection error"
+                });
+            } return res.status(200).json({
+                success: 1,
+                data: events
+            });
+        });
+
+    },
+
+
+    getSuggests: (req, res) => {
+        console.log("inside Suggests");
+        const body = req.body;
+
+
+        getSuggests(body, (err, events) => {
+            if (err) {
+                console.log(err);
+                return res.status(500).json({
+                    success: 0,
+                    message: "Database connection error"
+                });
+            } return res.status(200).json({
+                success: 1,
+                data: events
+            });
+        });
+
     },
 
 

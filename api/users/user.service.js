@@ -6,15 +6,17 @@ module.exports = {
     create: (data, callBack) => {
 
         pool.query(
-            `insert into user(first_name, last_name, email, phone, password)
-                    values(?,?,?,?,?)`,
+            `insert into user(first_name, last_name, email, phone, password, userType, DP)
+                    values(?,?,?,?,?,?,?)`,
 
             [
                 data.first_name,
                 data.last_name,
                 data.email,
                 data.phone,
-                data.password
+                data.password,
+                data.userType,
+                data.DP
 
             ],
             (error, results, fields) => {  // callback has three parameters
@@ -355,6 +357,87 @@ module.exports = {
             }
         );
     },
+
+
+
+    getSearchAdds: (data, callBack) => {
+        pool.query(
+            // `select advertiesments.title,advertiesments.user_id,advertiesments.subtitle,advertiesments.price,advertiesments.category,advertiesments.description,advertiesments.image1_url,advertiesments.Location,advertiesments.contactNo,advertiesments.whatsappNo,advertiesments.cart,advertiesments.availability,user.first_name,user.last_name from user
+            //  inner join advertiesments on user.user_id = advertiesments.user_id WHERE CONCAT(user.first_name, user.last_name, advertiesments.title, advertiesments.subtitle,advertiesments.category,advertiesments.description,advertiesments.Location) LIKE '%${data.search}%'`,
+
+            `select advertiesments.title,advertiesments.user_id,advertiesments.subtitle,advertiesments.price,advertiesments.category,advertiesments.description,advertiesments.image1_url,advertiesments.Location,advertiesments.contactNo,advertiesments.whatsappNo,advertiesments.cart,advertiesments.availability,user.first_name,user.last_name from user
+            inner join advertiesments on user.user_id = advertiesments.user_id 
+            WHERE (CONCAT(user.first_name, user.last_name, advertiesments.title, advertiesments.subtitle,advertiesments.category,advertiesments.description,advertiesments.Location) LIKE '%${data.search}%') OR
+                  (CONCAT(advertiesments.description,advertiesments.Location) LIKE '%${data.location}%') OR 
+                  (CONCAT(advertiesments.subtitle,advertiesments.category,advertiesments.description) LIKE '%${data.category}%');`,
+
+
+            [
+                data.search,
+                data.location,
+                data.category
+            ],
+
+            // console.log(data.search),
+            // console.log(data.location),
+            // console.log(data.category),
+
+            (err, events) => {
+                console.log("999999999999" + err);
+                if (err) {
+
+                    callBack(err);
+                } return callBack(null, events);
+            });
+
+    },
+
+    getUserTypebyUserId: (data, callBack) => {
+        pool.query(
+            'select userType from user where user_id=?',
+
+            [
+                data.user_id
+            ],
+
+            (err, events) => {
+                console.log("999999999999" + err);
+                if (err) {
+
+                    callBack(err);
+                } return callBack(null, events);
+            });
+
+    },
+
+    getSuggests: (data, callBack) => {
+        pool.query(
+            // `select advertiesments.title,advertiesments.user_id,advertiesments.subtitle,advertiesments.price,advertiesments.category,advertiesments.description,advertiesments.image1_url,advertiesments.Location,advertiesments.contactNo,advertiesments.whatsappNo,advertiesments.cart,advertiesments.availability,user.first_name,user.last_name from user
+            //  inner join advertiesments on user.user_id = advertiesments.user_id WHERE CONCAT(user.first_name, user.last_name, advertiesments.title, advertiesments.subtitle,advertiesments.category,advertiesments.description,advertiesments.Location) LIKE '%${data.search}%'`,
+
+            `select user.user_id, user.first_name, user.last_name, posts.post_id, posts.image_url, posts.description, posts.like_count from user
+            inner join posts on user.user_id = posts.user_id 
+            WHERE (CONCAT(posts.description, posts.category) LIKE '%${data.suggests}%');`,
+
+
+            [
+                data.suggests,
+
+            ],
+
+
+
+            (err, events) => {
+                console.log("999999999999" + err);
+                if (err) {
+
+                    callBack(err);
+                } return callBack(null, events);
+            });
+
+    },
+
+
 
 
 

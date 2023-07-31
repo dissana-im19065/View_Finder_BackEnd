@@ -14,7 +14,10 @@ const { createUser,
     getAdds,
     rentingProfile,
     getRentByUserId,
-    getAllRent } = require("./user.controller");
+    getAllRent,
+    getSearchAdds,
+    getUserTypebyUserId,
+    getSuggests } = require("./user.controller");
 
 const router = require("express").Router();
 const { checkToken } = require("../../auth/token_validation");
@@ -28,6 +31,7 @@ router.get("/adds", getAdds);// get is used to get all Advertiesments
 router.get("/rent", getRentByUserId);// post is used to add a new Advers 
 router.get("/rents", getAllRent);// get is used to get all rent posts
 
+
 router.post("/", createUser); // post is used to create a new resource
 router.get("/", getUsers); // get is used to retrieve data
 router.get("/:user_id", getUserByUserId); // :user_id is a parameter
@@ -40,7 +44,9 @@ router.post("/unlike", removeLike); // post is used to removeLikes
 router.post("/event", addEvent);// post is used to add a new event 
 router.post("/adds", addAdds);// post is used to add a new Advers 
 router.post("/rent", rentingProfile);// post is used to add a new Advers 
-
+router.post("/searchadds", getSearchAdds);// get is used to get all Advertiesments
+router.post("/suggests", getSuggests);// get is used to get all Suggests
+router.post("/type", getUserTypebyUserId); // :user_id is a parameter
 
 
 
