@@ -109,13 +109,14 @@ module.exports = {
     createPost: (data, callBack) => {
 
         pool.query(
-            `insert into posts(user_id, image_url, description)
-                    values(?,?,?)`,
+            `insert into posts(user_id, image_url, description, category)
+                    values(?,?,?,?)`,
 
             [
                 data.userId,
                 data.image_url,
                 data.description,
+                data.category
 
             ],
             (error, results, fields) => {  // callback has three parameters
@@ -436,6 +437,93 @@ module.exports = {
             });
 
     },
+
+    addUserRequests: (data, callBack) => {
+
+        pool.query(
+            `insert into customerrequests(user_id,title,description,location,category,contact1,contact2,want_date)
+                    values(?,?,?,?,?,?,?,?)`,
+
+            [
+                data.user_id,
+                data.title,
+                data.category,
+                data.description,
+                data.location,
+                data.contact1,
+                data.contact2,
+                data.want_date
+
+
+            ],
+            (error, results, fields) => {  // callback has three parameters
+                console.log("done addUserRequests table");
+                if (error) {
+                    return callBack(error);
+                }
+                return callBack(null, results);
+            }
+        );
+    },
+
+    getUserRequests: callBack => {
+        pool.query(
+            `select customerrequests.title,customerrequests.user_id,customerrequests.category,customerrequests.description,customerrequests.location,customerrequests.contact1,customerrequests.contact2,customerrequests.want_date,user.first_name,user.last_name from user
+             inner join customerrequests on user.user_id = customerrequests.user_id`,
+            [],
+            (error, results, fields) => {
+                if (error) {
+                    return callBack(error);
+                }
+                return callBack(null, results);
+            }
+        );
+    },
+
+    addreview: (data, callBack) => {
+
+        pool.query(
+            `insert into reviews(reviewer_id,profile_id,review,count)
+                    values(?,?,?,?)`,
+
+            [
+                data.reviewer_id,
+                data.profile_id,
+                data.review,
+                data.count
+
+
+
+            ],
+            (error, results, fields) => {  // callback has three parameters
+                console.log("done addUserRequests table");
+                if (error) {
+                    return callBack(error);
+                }
+                return callBack(null, results);
+            }
+        );
+    },
+
+    getReviewByProfileId: (data, callBack) => {
+        pool.query(
+            'select reviewer_id,review,count from reviews where profile_id=?',
+
+            [
+                data.profile_id
+            ],
+
+            (err, events) => {
+                console.log("fffffffffff9" + err);
+                if (err) {
+
+                    callBack(err);
+                } return callBack(null, events);
+            });
+
+    },
+
+
 
 
 

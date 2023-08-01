@@ -17,7 +17,11 @@ const { create,
     getAllRentPosts,
     getSearchAdds,
     getUserTypebyUserId,
-    getSuggests } = require("./user.service");
+    getSuggests,
+    addUserRequests,
+    getUserRequests,
+    addreview,
+    getReviewByProfileId } = require("./user.service");
 
 const { genSaltSync, hashSync, compareSync } = require("bcrypt"); // bcrypt is a library for hashing passwords
 const { sign } = require("jsonwebtoken"); // jsonwebtoken is a library for generating tokens
@@ -416,6 +420,83 @@ module.exports = {
 
 
         getSuggests(body, (err, events) => {
+            if (err) {
+                console.log(err);
+                return res.status(500).json({
+                    success: 0,
+                    message: "Database connection error"
+                });
+            } return res.status(200).json({
+                success: 1,
+                data: events
+            });
+        });
+
+    },
+
+    addUserRequests: (req, res) => {
+
+        const body = req.body;
+
+        addUserRequests(body, (err, adds) => {
+            console.log("inside addUserRequests");
+            if (err) {
+                console.log(err);
+                return res.status(500).json({
+                    success: 0,
+                    message: "Database connection error"
+                });
+            }
+            console.log("dddddfffffff");
+            return res.status(200).json({
+                success: 1,
+                data: adds
+            });
+        });
+    },
+
+    getUserRequests: (req, res) => {
+        console.log("inside getRequests");
+        getUserRequests((err, results) => {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            return res.json({
+                success: 1,
+                data: results
+            });
+        });
+    },
+
+
+    addreview: (req, res) => {
+
+        const body = req.body;
+
+        addreview(body, (err, adds) => {
+            console.log("inside addUserRequests");
+            if (err) {
+                console.log(err);
+                return res.status(500).json({
+                    success: 0,
+                    message: "Database connection error"
+                });
+            }
+            console.log("dddddfffffff");
+            return res.status(200).json({
+                success: 1,
+                data: adds
+            });
+        });
+    },
+
+    getReviewByProfileId: (req, res) => {
+        console.log("inside getReviewsByprofileId");
+        const body = req.body;
+
+
+        getReviewByProfileId(body, (err, events) => {
             if (err) {
                 console.log(err);
                 return res.status(500).json({

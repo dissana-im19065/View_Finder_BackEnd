@@ -17,7 +17,11 @@ const { createUser,
     getAllRent,
     getSearchAdds,
     getUserTypebyUserId,
-    getSuggests } = require("./user.controller");
+    getSuggests,
+    addUserRequests,
+    getUserRequests,
+    addreview,
+    getReviewByProfileId } = require("./user.controller");
 
 const router = require("express").Router();
 const { checkToken } = require("../../auth/token_validation");
@@ -26,10 +30,11 @@ const { checkToken } = require("../../auth/token_validation");
 
 router.post("/events", getEventByUserId);// post is used to get events 
 router.get("/post", getPostsNewsfeed); // get is used to retrieve data
-
-router.get("/adds", getAdds);// get is used to get all Advertiesments
+router.get("/req", getUserRequests);// get is used to get all Advertiesments
+router.get("/adds", getAdds);// get is used to get all User Requests
 router.get("/rent", getRentByUserId);// post is used to add a new Advers 
 router.get("/rents", getAllRent);// get is used to get all rent posts
+router.post("/revv", getReviewByProfileId);// post is used to add a new Advers 
 
 
 router.post("/", createUser); // post is used to create a new resource
@@ -47,7 +52,8 @@ router.post("/rent", rentingProfile);// post is used to add a new Advers
 router.post("/searchadds", getSearchAdds);// get is used to get all Advertiesments
 router.post("/suggests", getSuggests);// get is used to get all Suggests
 router.post("/type", getUserTypebyUserId); // :user_id is a parameter
-
+router.post("/req", addUserRequests);// post is used to add a new User Request 
+router.post("/rev", addreview);// post is used to add a new review
 
 
 module.exports = router; // export router to be used in app.js
